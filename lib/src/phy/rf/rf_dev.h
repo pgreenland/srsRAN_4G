@@ -62,6 +62,16 @@ static srsran_rf_plugin_t plugin_zmq   = {"", NULL, &srsran_rf_dev_zmq};
 #endif
 #endif
 
+/* Define implementation for Lime */
+#ifdef ENABLE_LIMESDR
+#ifdef ENABLE_RF_PLUGINS
+static srsran_rf_plugin_t plugin_lms = {"libsrsran_rf_lms.so", NULL, NULL};
+#else
+#include "rf_limesdr_impl.h"
+static srsran_rf_plugin_t plugin_lms   = {"", NULL, &srsran_rf_dev_lms};
+#endif
+#endif
+
 /* Define implementation for file-based RF */
 #include "rf_file_imp.h"
 static srsran_rf_plugin_t plugin_file = {"", NULL, &srsran_rf_dev_file};
@@ -110,6 +120,9 @@ static srsran_rf_plugin_t* rf_plugins[] = {
 #endif
 #ifdef ENABLE_ZEROMQ
     &plugin_zmq,
+#endif
+#ifdef ENABLE_LIMESDR
+    &plugin_lms,
 #endif
 #ifdef ENABLE_SIDEKIQ
     &plugin_skiq,
